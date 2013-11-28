@@ -19,13 +19,7 @@
  * lowest-numbered, in the bit string.
  */
 
-
-/* A 32-bit data type */
-#ifdef __alpha  /* Any other 64-bit machines? */
-typedef unsigned int word32;
-#else
-typedef unsigned long word32;
-#endif
+#include <stdint.h>
 
 /*
  * The standard does not specify the contents of the 8 4 bit->4 bit
@@ -93,8 +87,8 @@ kboxinit(void)
 #if __GNUC__
 __inline__
 #endif
-static word32
-f(word32 x)
+static uint32_t
+f(uint32_t x)
 {
 	/* Do substitutions */
 #if 0
@@ -120,9 +114,9 @@ f(word32 x)
  * The keys are defined similarly, with bit 256 being the msb of key[7].
  */
 void
-gostcrypt(word32 const in[2], word32 out[2], word32 const key[8])
+gostcrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8])
 {
-	register word32 n1, n2; /* As named in the GOST */
+	register uint32_t n1, n2; /* As named in the GOST */
 
 	n1 = in[0];
 	n2 = in[1];
@@ -177,9 +171,9 @@ gostcrypt(word32 const in[2], word32 out[2], word32 const key[8])
  * as done here.
  */
 void
-gostdecrypt(word32 const in[2], word32 out[2], word32 const key[8])
+gostdecrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8])
 {
-	register word32 n1, n2; /* As named in the GOST */
+	register uint32_t n1, n2; /* As named in the GOST */
 
 	n1 = in[0];
 	n2 = in[1];
@@ -251,11 +245,11 @@ gostdecrypt(word32 const in[2], word32 out[2], word32 const key[8])
 #define C2 0x01010101
 
 void
-gostofb(word32 const *in, word32 *out, int len,
-	word32 const iv[2], word32 const key[8])
+gostofb(uint32_t const *in, uint32_t *out, int len,
+	uint32_t const iv[2], uint32_t const key[8])
 {
-	word32 temp[2];         /* Counter */
-	word32 gamma[2];        /* Output XOR value */
+	uint32_t temp[2];         /* Counter */
+	uint32_t gamma[2];        /* Output XOR value */
 
 	/* Compute starting value for counter */
 	gostcrypt(iv, temp, key);
@@ -286,8 +280,8 @@ gostofb(word32 const *in, word32 *out, int len,
  */
 
 void
-gostcfbencrypt(word32 const *in, word32 *out, int len,
-	       word32 iv[2], word32 const key[8])
+gostcfbencrypt(uint32_t const *in, uint32_t *out, int len,
+	       uint32_t iv[2], uint32_t const key[8])
 {
 	while (len--) {
 		gostcrypt(iv, iv, key);
@@ -297,10 +291,10 @@ gostcfbencrypt(word32 const *in, word32 *out, int len,
 }
 
 void
-gostcfbdecrypt(word32 const *in, word32 *out, int len,
-	       word32 iv[2], word32 const key[8])
+gostcfbdecrypt(uint32_t const *in, uint32_t *out, int len,
+	       uint32_t iv[2], uint32_t const key[8])
 {
-	word32 t;
+	uint32_t t;
 	while (len--) {
 		gostcrypt(iv, iv, key);
 		t = *out;
@@ -320,9 +314,9 @@ gostcfbdecrypt(word32 const *in, word32 *out, int len,
  * len is the number of *blocks* in the input.
  */
 void
-gostmac(word32 const *in, int len, word32 out[2], word32 const key[8])
+gostmac(uint32_t const *in, int len, uint32_t out[2], uint32_t const key[8])
 {
-	register word32 n1, n2; /* As named in the GOST */
+	register uint32_t n1, n2; /* As named in the GOST */
 
 	n1 = 0;
 	n2 = 0;
@@ -361,14 +355,14 @@ gostmac(word32 const *in, int len, word32 out[2], word32 const key[8])
 #include <stdlib.h>
 
 /* Designed to cope with 15-bit rand() implementations */
-#define RAND32 ((word32)rand() << 17 ^ (word32)rand() << 9 ^ rand())
+#define RAND32 ((uint32_t)rand() << 17 ^ (uint32_t)rand() << 9 ^ rand())
 
 int
 main(void)
 {
-	word32 key[8];
-	word32 plain[2];
-	word32 cipher[2];
+	uint32_t key[8];
+	uint32_t plain[2];
+	uint32_t cipher[2];
 	int i, j;
 
 	kboxinit();
