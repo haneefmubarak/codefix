@@ -1,26 +1,14 @@
-/*
- * The GOST 28147-89 cipher
- *
- * This is based on the 25 Movember 1993 draft translation
- * by Aleksandr Malchik, with Whitfield Diffie, of the Government
- * Standard of the U.S.S.R. GOST 28149-89, "Cryptographic Transformation
- * Algorithm", effective 1 July 1990.  (Whitfield.Diffie@eng.sun.com)
- *
- * That is a draft, and may contain errors, which will be faithfully
- * reflected here, along with possible exciting new bugs.
- *
- * Some details have been cleared up by the paper "Soviet Encryption
- * Algorithm" by Josef Pieprzyk and Leonid Tombak of the University
- * of Wollongong, New South Wales.  (josef/leo@cs.adfa.oz.au)
- *
- * The standard is written by A. Zabotin (project leader), G.P. Glazkov,
- * and V.B. Isaeva.  It was accepted and introduced into use by the
- * action of the State Standards Committee of the USSR on 2 June 89 as
- * No. 1409.  It was to be reviewed in 1993, but whether anyone wishes
- * to take on this obligation from the USSR is questionable.
- *
- * This code is placed in the public domain.
- */
+// GOST 28147-89 block cipher
+//
+// This is the cleaned up version, functionally identical to the original.
+// The original version of this code can be found in `./original/gost.c`
+// and was placed in the public domain. This version is licensed under
+// the MIT license a copy of which can be found in `./LICENSE`.
+//
+// The cipher used is as outlined in the November 25, 1993 draft
+// translation by Aleksandr Malchik and Whitfield Diffie of the USSR
+// Standard GOST 28149-89, "Cryptographic Transformation Algorithm",
+// effective July 1, 1990.
 
 /*
  * If you read the standard, it belabors the point of copying corresponding
