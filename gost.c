@@ -36,28 +36,28 @@
  * The standard also does not specify a standard bit-string representation
  * for the contents of these blocks.
  */
-static unsigned char const k8[16] = {
+static uint8_t const k8[16] = {
 	14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7 }; 
-static unsigned char const k7[16] = {
+static uint8_t const k7[16] = {
 	15,  1,  8, 14,  6, 11,  3,  4,  9,  7,  2, 13, 12,  0,  5, 10 };
-static unsigned char const k6[16] = {
+static uint8_t const k6[16] = {
 	10,  0,  9, 14,  6,  3, 15,  5,  1, 13, 12,  7, 11,  4,  2,  8 };
-static unsigned char const k5[16] = {
+static uint8_t const k5[16] = {
 	 7, 13, 14,  3,  0,  6,  9, 10,  1,  2,  8,  5, 11, 12,  4, 15 };
-static unsigned char const k4[16] = {
+static uint8_t const k4[16] = {
 	 2, 12,  4,  1,  7, 10, 11,  6,  8,  5,  3, 15, 13,  0, 14,  9 };
-static unsigned char const k3[16] = {
+static uint8_t const k3[16] = {
 	12,  1, 10, 15,  9,  2,  6,  8,  0, 13,  3,  4, 14,  7,  5, 11 };
-static unsigned char const k2[16] = {
+static uint8_t const k2[16] = {
 	 4, 11,  2, 14, 15,  0,  8, 13,  3, 12,  9,  7,  5, 10,  6,  1 };
-static unsigned char const k1[16] = {
+static uint8_t const k1[16] = {
 	13,  2,  8,  4,  6, 15, 11,  1, 10,  9,  3, 14,  5,  0, 12,  7 };
 
 /* Byte-at-a-time substitution boxes */
-static unsigned char k87[256];
-static unsigned char k65[256];
-static unsigned char k43[256];
-static unsigned char k21[256];
+static uint8_t k87[256];
+static uint8_t k65[256];
+static uint8_t k43[256];
+static uint8_t k21[256];
 
 /*
  * Build byte-at-a-time subtitution tables.
