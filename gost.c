@@ -36,8 +36,9 @@
  * The standard also does not specify a standard bit-string representation
  * for the contents of these blocks.
  */
+
 static uint8_t const k8[16] = {
-	14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7 }; 
+	14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7 };
 static uint8_t const k7[16] = {
 	15,  1,  8, 14,  6, 11,  3,  4,  9,  7,  2, 13, 12,  0,  5, 10 };
 static uint8_t const k6[16] = {
@@ -63,9 +64,8 @@ static uint8_t k21[256];
  * Build byte-at-a-time subtitution tables.
  * This must be called once for global setup.
  */
-void
-kboxinit(void)
-{
+
+void kboxinit(void) {
 	int i;
 	for (i = 0; i < 256; i++) {
 		k87[i] = k8[i >> 4] << 4 | k7[i & 15];
@@ -84,24 +84,24 @@ kboxinit(void)
  *
  * This should be inlined for maximum speed
  */
+
 #if __GNUC__
 __inline__
 #endif
-static uint32_t
-f(uint32_t x)
-{
+
+static uint32_t f(uint32_t x) {
 	/* Do substitutions */
-#if 0
-	/* This is annoyingly slow */
-	x = k8[x>>28 & 15] << 28 | k7[x>>24 & 15] << 24 |
-	    k6[x>>20 & 15] << 20 | k5[x>>16 & 15] << 16 |
-	    k4[x>>12 & 15] << 12 | k3[x>> 8 & 15] <<  8 |
-	    k2[x>> 4 & 15] <<  4 | k1[x     & 15];
-#else
-	/* This is faster */
-	x = k87[x>>24 & 255] << 24 | k65[x>>16 & 255] << 16 |
-	    k43[x>> 8 & 255] <<  8 | k21[x & 255];
-#endif
+	#if 0
+		/* This is annoyingly slow */
+		x = k8[x>>28 & 15] << 28 | k7[x>>24 & 15] << 24 |
+		    k6[x>>20 & 15] << 20 | k5[x>>16 & 15] << 16 |
+		    k4[x>>12 & 15] << 12 | k3[x>> 8 & 15] <<  8 |
+		    k2[x>> 4 & 15] <<  4 | k1[x     & 15];
+	#else
+		/* This is faster */
+		x = k87[x>>24 & 255] << 24 | k65[x>>16 & 255] << 16 |
+		    k43[x>> 8 & 255] <<  8 | k21[x & 255];
+	#endif
 
 	/* Rotate left 11 bits */
 	return x<<11 | x>>(32-11);
@@ -113,9 +113,8 @@ f(uint32_t x)
  *
  * The keys are defined similarly, with bit 256 being the msb of key[7].
  */
-void
-gostcrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8])
-{
+
+void gostcrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8]) {
 	register uint32_t n1, n2; /* As named in the GOST */
 
 	n1 = in[0];
@@ -162,7 +161,6 @@ gostcrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8])
 	out[0] = n2;
 	out[1] = n1;
 }
-	
 
 /*
  * The key schedule is somewhat different for decryption.
@@ -170,9 +168,8 @@ gostcrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8])
  * You could define an expanded key, or just write the code twice,
  * as done here.
  */
-void
-gostdecrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8])
-{
+
+void gostdecrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8]) {
 	register uint32_t n1, n2; /* As named in the GOST */
 
 	n1 = in[0];
@@ -244,10 +241,8 @@ gostdecrypt(uint32_t const in[2], uint32_t out[2], uint32_t const key[8])
 #define C1 0x01010104
 #define C2 0x01010101
 
-void
-gostofb(uint32_t const *in, uint32_t *out, int len,
-	uint32_t const iv[2], uint32_t const key[8])
-{
+void gostofb(uint32_t const *in, uint32_t *out, int len,
+		uint32_t const iv[2], uint32_t const key[8]) {
 	uint32_t temp[2];         /* Counter */
 	uint32_t gamma[2];        /* Output XOR value */
 
@@ -279,10 +274,8 @@ gostofb(uint32_t const *in, uint32_t *out, int len,
  * The IV is modified in place.  Again, len is in *blocks*.
  */
 
-void
-gostcfbencrypt(uint32_t const *in, uint32_t *out, int len,
-	       uint32_t iv[2], uint32_t const key[8])
-{
+void gostcfbencrypt(uint32_t const *in, uint32_t *out, int len,
+		       uint32_t iv[2], uint32_t const key[8]) {
 	while (len--) {
 		gostcrypt(iv, iv, key);
 		iv[0] = *out++ ^= iv[0];
@@ -290,10 +283,8 @@ gostcfbencrypt(uint32_t const *in, uint32_t *out, int len,
 	}
 }
 
-void
-gostcfbdecrypt(uint32_t const *in, uint32_t *out, int len,
-	       uint32_t iv[2], uint32_t const key[8])
-{
+void gostcfbdecrypt(uint32_t const *in, uint32_t *out, int len,
+		       uint32_t iv[2], uint32_t const key[8]) {
 	uint32_t t;
 	while (len--) {
 		gostcrypt(iv, iv, key);
@@ -306,16 +297,14 @@ gostcfbdecrypt(uint32_t const *in, uint32_t *out, int len,
 	}
 }
 
-
 /*
  * The message suthetication code uses only 16 of the 32 rounds.
  * There *is* a swap after the 16th round.
  * The last block should be padded to 64 bits with zeros.
  * len is the number of *blocks* in the input.
  */
-void
-gostmac(uint32_t const *in, int len, uint32_t out[2], uint32_t const key[8])
-{
+
+void gostmac(uint32_t const *in, int len, uint32_t out[2], uint32_t const key[8]) {
 	register uint32_t n1, n2; /* As named in the GOST */
 
 	n1 = 0;
@@ -357,9 +346,7 @@ gostmac(uint32_t const *in, int len, uint32_t out[2], uint32_t const key[8])
 /* Designed to cope with 15-bit rand() implementations */
 #define RAND32 ((uint32_t)rand() << 17 ^ (uint32_t)rand() << 9 ^ rand())
 
-int
-main(void)
-{
+int main(void) {
 	uint32_t key[8];
 	uint32_t plain[2];
 	uint32_t cipher[2];
@@ -394,4 +381,3 @@ main(void)
 }
 
 #endif /* TEST */
-
