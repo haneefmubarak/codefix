@@ -8,7 +8,11 @@ relicensed to the MIT license.
 Fixed Code
 ----------
 
-
+ - GOST block cipher
+   - gost.c
+   - C
+   - example (set of functions, not a library but not intended
+     for standalone use either)
 
 Contribute
 ----------
